@@ -1,0 +1,151 @@
+heroku run rake db:migrate
+
+rails generate migration add_index_to_users_email
+
+
+_
+rails db:migrate
+
+ensuite aller dans le model post
+
+belongs_to :category, counter_cache: true
+rails c
+"guide associations reference"
+p = Post.first 
+c = Category.first
+
+p.category -> nill
+p.category = category
+p.save
+p.category
+p.category.name
+p.create_category(name: "Test", slug"demo")
+p.save
+
+p = Post.last
+c = Category.find(2)
+p.category = c
+p.save
+
+page index 
+<% if post.category %>
+<p>
+    <%= post.category.name %>
+</p>
+<% end %>
+
+fichier controller posts
+def index    
+    @posts = Post.includes(:category).all
+end 
+
+
+categoryrb
+    has_many posts
+
+console 
+c.posts 
+c.posts.online 
+Ici on a un scop defini plus tôt
+
+rails db:migrate
+rails g migration add_posts_count_to_categories posts_count:integer
+un fichier et crée en bdd
+
+add_column :categories, :posts_count, :integer, default: 0
+rails db:migrate
+
+rails c
+
+p = Post.first
+c = Category.first
+c.posts << p 
+
+Category.reset_counters(1, :posts)
+
+rails g model Tag name:string
+
+rails g migration create_join_table_posts_tags post tag
+#dans l'ordre alphabetique
+
+rails db:migrate
+rollback 
+on mets les index
+rails db:migrate
+
+model post
+
+has_and_belongs_to_many :tags
+
+model tag
+
+has_and_belongs_to_many :posts
+
+console
+t = Tag.create(name: "ruby")
+t2 = Tag.create(name: "rails")
+
+p.tags = [t, t2] 
+
+p.tags.clear
+
+t.posts << p
+
+<% if !post.tags.empty? %>
+<p>
+    Tags : 
+    <% post.tags.each do |tag| %> ou plus sympa <% post.tags.map(&:name)join(', ') %>
+        <%= tag.name %>,
+    <% end %>
+</p>
+<% end %>
+
+fichier controller posts
+def index    
+    @posts = Post.includes(:category, :tags).all
+end 
+
+irb >
+Category.includes(posts: :tags).all
+
+categories.first.posts.first.tags.first
+
+
+rails g migration creat_meta
+code de la doc methode change
+metaable
+rails db:migrate
+
+créer le meta_rb
+ has_many :metas, as: :metaable
+
+Class Meta < app...
+ belongs_to: mettaable, polymorphic: true
+end
+
+post.rb
+has_many :metas, as: :metaable
+
+category.rb
+has_many :metas, as: :metaable
+
+p = Post.first
+
+exit 
+rails g migration rename_metas
+
+def change (dans Renameetas)
+    rename_table :metas, :meta
+
+1/le nom a changer 2/le nom a utiliser
+
+rails migrate on  peut enlever -> has_many :metas, as: :metaable
+
+p.metas.create(name: 'seo_title')
+Meta.first.mettaable
+Meta.inclludes(:mettaable).all
+metas = Meta.includes:mettaable).all
+metas.first.mettaable.id
+metas.first.mettaable.name
+
+

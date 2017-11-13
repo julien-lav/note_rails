@@ -1,0 +1,85 @@
+PART I - Devise
+
+Dans le gemfile 
+
+gem devise
+
+bundle install
+
+rails g devise:install
+rails g controller Home index
+
+dans route.rb
+
+root home#index
+
+rails g devise User 
+rake db:migrate
+rake routes 
+
+index.html.erb
+
+<ul>
+
+<% if user_signed_in? %>
+<li>
+    <%= link_to "Sign Out", destroy_user_session_path,method: :delete %>
+</li>   
+<li>
+    <%= current_user.email %>
+</li>  
+<% else %>
+<li>
+    <%= link_to "Sign In", new_user_session_path %>
+</li>
+<li>
+    <%= link_to "Sign Up", new_user_registration_path %>
+</li>
+<% end %> 
+</ul> 
+
+
+PART II - Devise 
+
+rails g devise:views 
+rails g migration AddAddressToUsers address:string
+rake db:migrate
+
+Ajout de l'edition de l'user
+<ul>
+
+<% if user_signed_in? %>
+<li>
+    <%= link_to "Sign Out", destroy_user_session_path,method: :delete %>
+</li>   
+<li>
+    <%= current_user.email %>
+</li>  
+<li>
+    <%= link_to "Edit Account", edit_user_registration_path %>
+</li> 
+<% else %>
+<li>
+    <%= link_to "Sign In", new_user_session_path %>
+</li>
+<li>
+    <%= link_to "Sign Up", new_user_registration_path %>
+</li>
+<% end %> 
+</ul> 
+
+Dans Application controller 
+
+before_action :sanitize_devise_params, if: :devise_controller?
+
+def sanitize_devise_parameters
+    devise_parameter_sanatizer.permit(:sign_up, keys: [:adress])
+end 
+
+
+Dans registrations/new.html.erb
+<%= f.label :adress, 'adress' %>
+<%= f.text_feild :adress %>
+
+
+ <%= current_user.address %>

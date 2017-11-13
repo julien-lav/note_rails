@@ -1,0 +1,120 @@
+rails new project
+
+ajout de la 
+gem 'devise'
+bundle install 
+
+ 
+rails g devise:install 
+
+config/environement/developement.rb
+
+# Mailer
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+      address: 'localhost',
+      port: 1025
+
+    }
+  config.action_mailer.default_url_options = { host: 'local.dev', port: 3000 }
+
+rails g controller Home index private
+
+rails g devise:views
+//pour créer le model et la migration  
+rails g devise User
+
+Dans la migration user on ajoute le 
+:confirmable 
+
+class User < ApplicationRecord
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable, :confirmable
+end
+
+Dans la migration devise create décommenter 
+après 
+## Confirmable
+
+Rails db:migrate
+
+root "home#index"
+
+Dans la vue views/home/index.html.erb
+
+<p>
+	<%= link_to 'Se connecter ', new_user_session_path %>
+</p>
+
+Dans la vue views/layouts/application.html.erb
+
+<p class="notice"><%= notice %></p>  		
+<p class="alert"><%= alert %></p>
+
+Dans la vue views/home/index.html.erb
+
+<%= debug user_signed_in? %>
+<%= debug current_user %>
+
+<% if user_signed_in? %>
+<%= link_to 'Se déconnecter ', destroy_user_session_path, method: :delete %>
+<% else %>
+<%= link_to 'Se connecter ', new_user_session_path %>
+
+
+Dans la vue views/layouts/application.html.erb
+
+<%= debug user_signed_in? %>
+<%= debug session.to_hash %>
+
+rails db:rollback
+
+Dans la migration DeviseCreateUser 
+
+t.string :username, null: false, default
+
+plus bas 
+add_index :users, :email,     unique: true
+
+rails db:migrate
+
+Ajout de champ username dans -> registration/new.html.erb
+
+Dans application controller 
+
+-> before_action :configure_devise_parameters, if: :devise_controller?
+
+def configure_devise_parameters
+    decise_parameter_sanatizer.permit(:sign_up)
+    {
+    |u| upermit(:username, :email, :password, :password_confirmation) 
+    }
+end
+
+
+18:10 prise de note à refaire sur la suite 
+
+validates :username, presence: true, uniqueness: {case_sensitive: false} ...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

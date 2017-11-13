@@ -1,0 +1,42 @@
+rails s -e production
+
+
+secrets.yml
+-> Base de donne dans production ici tuto en production
+
+rails assets:precompile 
+
+body{
+background:image-url('ruby.jpg'); 
+}
+
+<%= image_tag 'ruby-logo-png', width:100 %>
+
+nouveau css
+pour application.html.erb
+
+config.asset.precompile += %w (admin.css) 
+Dans config/initializer/assets.rb
+Rails.application.config.asset.precompile += %w (admin.css) 
+
+Dans par exemple admin.css
+require bootstrap 
+
+Ajouter le fichier dans lib>assets>stylesheet>bootstrap.css
+
+vendor -> pour les gems externes 
+lib -> fichiers externe à l'application
+
+Pour ne pas generer de dossier asset tout le temps on peut passer 
+config.generator.helper = false (à false)
+
+#config.action_controller.asset_host = 'cdnmonsuperdomain.fr'
+
+turbolinks
+
+
+
+
+
+
+
